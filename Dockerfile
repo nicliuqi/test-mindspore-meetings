@@ -1,10 +1,9 @@
-FROM openeuler/openeuler:21.03
+FROM openeuler/openeuler:22.03-lts
 
 MAINTAINER TommyLike<tommylikehu@gmail.com>
 
-RUN yum update && \
-    yum install -y vim wget git xz tar make automake autoconf libtool gcc gcc-c++ kernel-devel libmaxminddb-devel pcre-devel openssl openssl-devel tzdata \
-        readline-devel libffi-devel python3-devel mariadb-devel python3-pip net-tools.x86_64 iputils
+RUN yum install -y vim wget git xz tar make automake autoconf libtool gcc gcc-c++ kernel-devel libmaxminddb-devel pcre-devel openssl \
+openssl-devel tzdata readline-devel libffi-devel python3-devel mariadb-devel python3-pip net-tools.x86_64 iputils
 
 RUN pip3 install uwsgi
 
@@ -24,6 +23,8 @@ RUN cp /usr/bin/python3 /usr/bin/python
 RUN cd /work/app-meeting-server && pip3 install armorrasp.tar.gz
 
 ENV LANG=en_US.UTF-8
+ENV SENDER="public@mindspore.cn"
+ENV CONTACT_EMAIL="contact@mindspore.cn"
 
 EXPOSE 8080
 ENTRYPOINT ["uwsgi", "--ini", "/work/app-meeting-server/deploy/production/uwsgi.ini"]
