@@ -56,7 +56,7 @@ def upload_to_obs(tmp_file, activity_id):
     secret_access_key = os.getenv('MINDSPORE_SECRET_ACCESS_KEY', '')
     endpoint = os.getenv('MINDSPORE_OBS_ENDPOINT', '')
     bucketName = os.getenv('MINDSPORE_OBS_BUCKETNAME', '')
-    if not all(access_key_id, secret_access_key, endpoint, bucketName):
+    if not access_key_id or not secret_access_key or not endpoint or not bucketName:
         logger.error('losing required arguments for ObsClient')
         sys.exit(1)
     obs_client = ObsClient(access_key_id=access_key_id,
