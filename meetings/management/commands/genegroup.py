@@ -1,15 +1,15 @@
 import logging
-import os
+import subprocess
 from meetings.models import Group
 from django.core.management.base import BaseCommand
 
-
 logger = logging.getLogger('log')
+
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        os.system('test -d meetings/community && rm -rf meetings/community')
-        os.system('cd meetings; git clone https://gitee.com/mindspore/community.git')
+        subprocess.call('test -d meetings/community && rm -rf meetings/community'.split())
+        subprocess.call('cd meetings; git clone https://gitee.com/mindspore/community.git'.split())
         etherpad_pre = 'https://etherpad.mindspore.cn/p/meetings-'
         if not Group.objects.filter(name='MSG'):
             Group.objects.create(name='MSG', group_type=2, etherpad=etherpad_pre + 'MSG')
@@ -38,3 +38,4 @@ class Command(BaseCommand):
                         Group.objects.filter(name=sig_name).update(group_type=1, etherpad=etherpad_pre + sig_name)
                         logger.info('Update sig {}'.format(sig_name))
         logger.info('Done')
+
