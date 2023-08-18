@@ -18,7 +18,7 @@ from pathlib import Path
 
 CONFIG_PATH = os.getenv('CONFIG_PATH')
 XARMOR_CONF = os.getenv('XARMOR_CONF')
-if os.path.exists(CONFIG_PATH):
+if not os.path.exists(CONFIG_PATH):
     sys.exit()
 with open(CONFIG_PATH, 'r') as f:
     content = yaml.safe_load(f)
