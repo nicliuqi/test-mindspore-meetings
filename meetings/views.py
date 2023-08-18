@@ -1662,7 +1662,7 @@ class AgreePrivacyPolicyView(GenericAPIView, UpdateModelMixin):
             })
             resp.status_code = 400
             return resp
-        User.objects.filter(id=self.request.user.id).update(agree_pvivacy_policy=True,
+        User.objects.filter(id=self.request.user.id).update(agree_privacy_policy=True,
                                                             agree_privacy_policy_time=now_time)
         resp = JsonResponse({
             'code': 201,
