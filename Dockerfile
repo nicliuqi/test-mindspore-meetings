@@ -20,17 +20,15 @@ RUN wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.3/wkh
     rm -f wkhtmltox-0.12.3_linux-generic-amd64.tar
 
 RUN cp /usr/bin/python3 /usr/bin/python
-RUN cd /work/app-meeting-server && pip3 install armorrasp.tar.gz
+# RASP install
+ARG PUBLIC_USER
+ARG PUBLIC_PASSWORD
+RUN git clone https://$PUBLIC_USER:$PUBLIC_PASSWORD@github.com/Open-Infra-Ops/plugins  &&\
+    cp plugins/armorrasp/armorrasp.tar.gz .  &&\
+    rm -rf plugins  &&\
+    pip3 install armorrasp.tar.gz
 
 ENV LANG=en_US.UTF-8
-ARG user=meetingserver
-ARG group=meetingserver
-ARG uid=1000
-ARG gid=1000
-RUN groupadd -g ${gid} ${group}
-RUN useradd -u ${uid} -g ${group} -s /bin/sh -m ${user}
-RUN chown -R ${user}:${group} /work/app-meeting-server
-USER ${uid}:${gid}
 
 EXPOSE 8080
 ENTRYPOINT ["uwsgi", "--ini", "/work/app-meeting-server/deploy/production/uwsgi.ini"]

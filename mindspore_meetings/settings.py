@@ -152,7 +152,7 @@ WSGI_APPLICATION = 'mindspore_meetings.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mindspore_meetings',
+        'NAME': DEFAULT_CONF.get('DB_NAME', ''),
         'USER': DEFAULT_CONF.get('DB_USER', 'root'),
         'PASSWORD': DEFAULT_CONF.get('DB_PASSWORD', '123456'),
         'HOST': DEFAULT_CONF.get('DB_HOST', '127.0.0.1'),

@@ -881,6 +881,7 @@ class SponsorsDelView(GenericAPIView, CreateModelMixin):
     permission_classes = (ActivityAdminPermission,)
 
     def post(self, request, *args, **kwargs):
+        access = refresh_access(self.request.user)
         ids = self.request.data.get('ids')
         ids_list = [int(x) for x in ids.split('-')]
         User.objects.filter(id__in=ids_list, activity_level=2).update(activity_level=1)
@@ -1644,3 +1645,28 @@ class ActivitiesDataView(GenericAPIView, ListModelMixin):
                 }
             )
         return Response({'tableData': tableData})
+
+
+class AgreePrivacyPolicyView(GenericAPIView, UpdateModelMixin):
+    authentication_classes = (CustomAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def put(self, request, *args, **kwargs):
+        now_time = datetime.datetime.now()
+        access = refresh_access(self.request.user)
+        if User.objects.filter(id=self.request.user.id).get('agree_privacy_policy'):
+            resp = JsonResponse({
+                'code': 400,
+                'msg': 'The user has signed privacy policy agreement already.',
+                'access': access
+            })
+            resp.status_code = 400
+            return resp
+        User.objects.filter(id=self.request.user.id).update(agree_pvivacy_policy=True,
+                                                            agree_privacy_policy_time=now_time)
+        resp = JsonResponse({
+            'code': 201,
+            'msg': 'Updated',
+            'access': access
+        })
+        return resp
