@@ -16,14 +16,17 @@ import time
 import yaml
 from pathlib import Path
 
-if os.path.exists('/vault/secrets/secrets.yaml'):
-    with open('/vault/secrets/secrets.yaml', 'r') as f:
-        content = yaml.safe_load(f)
-    DEFAULT_CONF = content
-else:
+CONFIG_PATH = os.getenv('CONFIG_PATH')
+XARMOR_CONF = os.getenv('XARMOR_CONF')
+if os.path.exists(CONFIG_PATH):
     sys.exit()
+with open(CONFIG_PATH, 'r') as f:
+    content = yaml.safe_load(f)
+DEFAULT_CONF = content
 if sys.argv[0] == 'uwsgi':
-    os.remove('/vault/secrets/secrets.yaml')
+    os.remove(CONFIG_PATH)
+    if XARMOR_CONF in os.listdir():
+        os.remove(XARMOR_CONF)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
