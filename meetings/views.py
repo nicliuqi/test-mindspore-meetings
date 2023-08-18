@@ -1654,7 +1654,7 @@ class AgreePrivacyPolicyView(GenericAPIView, UpdateModelMixin):
     def put(self, request, *args, **kwargs):
         now_time = datetime.datetime.now()
         access = refresh_access(self.request.user)
-        if User.objects.filter(id=self.request.user.id).get('agree_privacy_policy'):
+        if User.objects.get(id=self.request.user.id).agree_privacy_policy:
             resp = JsonResponse({
                 'code': 400,
                 'msg': 'The user has signed privacy policy agreement already.',
