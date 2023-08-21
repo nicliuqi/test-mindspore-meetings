@@ -33,7 +33,7 @@ from meetings.serializers import LoginSerializer, UsersInGroupSerializer, SigsSe
     ActivityRegistrantsSerializer, ApplicantInfoSerializer
 from meetings.send_email import sendmail
 from meetings.utils.tecent_apis import *
-from meetings.utils import send_feedback, prepare_create_activity, send_applicants_info, gene_wx_code, gene_sign_code
+from meetings.utils import send_feedback, prepare_create_activity, send_applicants_info, gene_wx_code
 from obs import ObsClient
 from meetings.utils import drivers
 from meetings.auth import CustomAuthentication
@@ -1110,8 +1110,6 @@ class ApproveActivityView(GenericAPIView, UpdateModelMixin):
             logger.info('活动id: {}'.format(activity_id))
             img_url = gene_wx_code.run(appid, secret, activity_id)
             logger.info('生成活动页面二维码: {}'.format(img_url))
-            sign_url = gene_sign_code.run(appid, secret, activity_id)
-            logger.info('生成活动签到二维码: {}'.format(sign_url))
             Activity.objects.filter(id=activity_id, status=2).update(status=3, wx_code=img_url, sign_url=sign_url)
             return JsonResponse({'code': 201, 'msg': '活动通过审核', 'access': access})
         else:
