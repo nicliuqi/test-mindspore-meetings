@@ -20,7 +20,7 @@ from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, ListModelM
 from rest_framework.response import Response
 from rest_framework_simplejwt import authentication
 from rest_framework_simplejwt.tokens import RefreshToken
-from meetings.models import Meeting, Record, Activity, ActivityCollect, ActivityRegister, ActivitySign
+from meetings.models import Meeting, Record, Activity, ActivityCollect
 from meetings.permissions import MaintainerPermission, AdminPermission, QueryPermission, SponsorPermission, \
     ActivityAdminPermission
 from meetings.models import GroupUser, Group, User, Collect, Feedback, City, CityUser
@@ -29,11 +29,10 @@ from meetings.serializers import LoginSerializer, UsersInGroupSerializer, SigsSe
     MeetingDelSerializer, MeetingDetailSerializer, MeetingsListSerializer, CollectSerializer, FeedbackSerializer, \
     CitiesSerializer, CityUserAddSerializer, CityUserDelSerializer, UserCitySerializer, SponsorSerializer, \
     ActivitySerializer, ActivityUpdateSerializer, ActivityDraftUpdateSerializer, ActivitiesSerializer, \
-    ActivityRetrieveSerializer, ActivityCollectSerializer, ActivityRegisterSerializer, ActivitySignSerializer, \
-    ActivityRegistrantsSerializer, ApplicantInfoSerializer
+    ActivityRetrieveSerializer, ActivityCollectSerializer
 from meetings.send_email import sendmail
 from meetings.utils.tecent_apis import *
-from meetings.utils import send_feedback, prepare_create_activity, send_applicants_info, gene_wx_code
+from meetings.utils import send_feedback, prepare_create_activity, gene_wx_code
 from obs import ObsClient
 from meetings.utils import drivers
 from meetings.auth import CustomAuthentication
@@ -1381,8 +1380,7 @@ class MyCountsView(GenericAPIView, ListModelMixin):
         collected_activities_count = len(Activity.objects.filter(is_delete=0, id__in=(
             ActivityCollect.objects.filter(user_id=user_id).values_list('activity_id', flat=True))).values())
         res = {'collected_meetings_count': collected_meetings_count,
-               'collected_activities_count': collected_activities_count,
-               }
+               'collected_activities_count': collected_activities_count}
         # permission limited
         if level == 2:
             created_meetings_count = len(Meeting.objects.filter(is_delete=0, user_id=user_id).values())

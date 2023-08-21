@@ -16,6 +16,7 @@ import time
 import yaml
 from pathlib import Path
 
+
 CONFIG_PATH = os.getenv('CONFIG_PATH')
 XARMOR_CONF = os.getenv('XARMOR_CONF')
 if not os.path.exists(CONFIG_PATH):

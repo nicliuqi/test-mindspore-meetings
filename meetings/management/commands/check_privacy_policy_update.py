@@ -8,7 +8,7 @@ from obs import ObsClient
 logger = logging.getLogger('log')
 ACCESS_KEY_ID = settings.DEFAULT_CONF.get('QUERY_AK')
 SECRET_ACCESS_KEY = settings.DEFAULT_CONF.get('QUERY_SK')
-ENDPOINT = settings.DEFAULT_conf.get('QUERY_ENDPOINT')
+ENDPOINT = settings.DEFAULT_CONF.get('QUERY_ENDPOINT')
 BUCKET_NAME = settings.DEFAULT_CONF.get('QUERY_BUCKETNAME')
 OBJ_KEY = settings.DEFAULT_CONF.get('QUERY_OBJ')
 QUERY_INTERVAL = settings.DEFAULT_CONF.get('QUERY_INTERVAL')
@@ -29,7 +29,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # 获取当前时间
         now_time = datetime.now()
-        # 连接 ObsClient
+        # 连接ObsClient
         obs_client = ObsClient(access_key_id=ACCESS_KEY_ID, secret_access_key=SECRET_ACCESS_KEY, server=ENDPOINT)
         metadata = obs_client.getObjectMetadata(BUCKET_NAME, OBJ_KEY)
         if metadata.status != 200:
@@ -42,4 +42,4 @@ class Command(BaseCommand):
             logger.info('There is no need to update agreement, exit.')
             return
         User.objects.all().update(agree_privacy_policy=False)
-        logger.info('Notice the target object has been modified, update agreement status os all users.')
+        logger.info('Notice the target object has been modified, update agreement status of all users.')
