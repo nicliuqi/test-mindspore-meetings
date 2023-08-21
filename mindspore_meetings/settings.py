@@ -25,8 +25,8 @@ with open(CONFIG_PATH, 'r') as f:
 DEFAULT_CONF = content
 if sys.argv[0] == 'uwsgi':
     os.remove(CONFIG_PATH)
-    if XARMOR_CONF in os.listdir():
-        os.remove(XARMOR_CONF)
+    if os.path.basename(XARMOR_CONF) in os.listdir():
+        os.remove(os.path.basename(XARMOR_CONF))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
