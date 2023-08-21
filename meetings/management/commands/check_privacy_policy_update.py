@@ -1,5 +1,4 @@
 import logging
-import subprocess
 from meetings.models import User
 from datetime import datetime
 from django.conf import settings
@@ -31,8 +30,7 @@ class Command(BaseCommand):
         # 获取当前时间
         now_time = datetime.now()
         # 连接 ObsClient
-        obs_client = ObsClient(access_key_id=ACCESS_KEY_ID, secret_access_key=SECRET_ACCESS_KEY, server='https://%s'
-                                                                                                        %ENDPOINT)
+        obs_client = ObsClient(access_key_id=ACCESS_KEY_ID, secret_access_key=SECRET_ACCESS_KEY, server=ENDPOINT)
         metadata = obs_client.getObjectMetadata(BUCKET_NAME, OBJ_KEY)
         if metadata.status != 200:
             logger.error('Failed to get search the target object.')
