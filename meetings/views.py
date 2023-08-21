@@ -1110,7 +1110,7 @@ class ApproveActivityView(GenericAPIView, UpdateModelMixin):
             logger.info('活动id: {}'.format(activity_id))
             img_url = gene_wx_code.run(appid, secret, activity_id)
             logger.info('生成活动页面二维码: {}'.format(img_url))
-            Activity.objects.filter(id=activity_id, status=2).update(status=3, wx_code=img_url, sign_url=sign_url)
+            Activity.objects.filter(id=activity_id, status=2).update(status=3, wx_code=img_url)
             return JsonResponse({'code': 201, 'msg': '活动通过审核', 'access': access})
         else:
             return JsonResponse({'code': 400, 'msg': '活动不存在', 'access': access})
