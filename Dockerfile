@@ -26,7 +26,8 @@ ARG PUBLIC_PASSWORD
 RUN git clone https://$PUBLIC_USER:$PUBLIC_PASSWORD@github.com/Open-Infra-Ops/plugins  &&\
     cp plugins/armorrasp/armorrasp.tar.gz .  &&\
     rm -rf plugins  &&\
-    pip3 install armorrasp.tar.gz
+    pip3 install armorrasp.tar.gz && \
+    rm -rf armorrasp.tar.gz
 
 ENV LANG=en_US.UTF-8
 
