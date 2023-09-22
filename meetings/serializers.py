@@ -7,6 +7,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from meetings.models import Group, Meeting, Collect, User, GroupUser, Feedback, City, CityUser, Activity, \
     ActivityCollect, ActivityRegister, ActivitySign
+from meetings.utils import wx_apis
 
 logger = logging.getLogger('log')
 
@@ -29,16 +30,8 @@ class LoginSerializer(serializers.ModelSerializer):
             if not code:
                 logger.warning('Login without jscode.')
                 raise serializers.ValidationError('需要code', code='code_error')
-            r = requests.get(
-                url='https://api.weixin.qq.com/sns/jscode2session?',
-                params={
-                    'appid': settings.MINDSPORE_APP_CONF['appid'],
-                    'secret': settings.MINDSPORE_APP_CONF['secret'],
-                    'js_code': code,
-                    'grant_type': 'authorization_code'
-                }
-            ).json()
-            if 'openid' not in r:
+            r = wx_apis.get_token()
+            if not r.get('openid'):
                 logger.warning('Failed to get openid.')
                 raise serializers.ValidationError('未获取到openid', code='code_error')
             openid = r['openid']

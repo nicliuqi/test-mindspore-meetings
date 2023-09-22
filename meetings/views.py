@@ -32,7 +32,7 @@ from meetings.serializers import LoginSerializer, UsersInGroupSerializer, SigsSe
     ActivityRetrieveSerializer, ActivityCollectSerializer
 from meetings.send_email import sendmail
 from meetings.utils.tecent_apis import *
-from meetings.utils import send_feedback, prepare_create_activity, gene_wx_code
+from meetings.utils import send_feedback, prepare_create_activity, gene_wx_code, wx_apis
 from obs import ObsClient
 from meetings.utils import drivers
 from meetings.auth import CustomAuthentication
@@ -489,7 +489,7 @@ class CancelMeetingView(GenericAPIView, UpdateModelMixin):
             # 发送会议取消通知
             collections = Collect.objects.filter(meeting_id=meeting.id)
             if collections:
-                access_token = self.get_token()
+                access_token = wx_apis.get_token()
                 topic = meeting.topic
                 date = meeting.date
                 start_time = meeting.start
@@ -499,10 +499,8 @@ class CancelMeetingView(GenericAPIView, UpdateModelMixin):
                     user = User.objects.get(id=user_id)
                     nickname = user.nickname
                     openid = user.openid
-                    content = self.get_remove_template(openid, topic, time, mid)
-                    r = requests.post(
-                        'https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token={}'.format(access_token),
-                        data=json.dumps(content))
+                    content = wx_apis.get_remove_template(openid, topic, time, mid)
+                    r = wx_apis.send_subscription(content, access_token)
                     if r.status_code != 200:
                         logger.error('status code: {}'.format(r.status_code))
                         logger.error('content: {}'.format(r.json()))
@@ -1103,11 +1101,9 @@ class ApproveActivityView(GenericAPIView, UpdateModelMixin):
     def put(self, request, *args, **kwargs):
         access = refresh_access(self.request.user)
         activity_id = self.kwargs.get('pk')
-        appid = settings.MINDSPORE_APP_CONF['appid']
-        secret = settings.MINDSPORE_APP_CONF['secret']
         if activity_id in self.queryset.values_list('id', flat=True):
             logger.info('活动id: {}'.format(activity_id))
-            img_url = gene_wx_code.run(appid, secret, activity_id)
+            img_url = gene_wx_code.run(activity_id)
             logger.info('生成活动页面二维码: {}'.format(img_url))
             Activity.objects.filter(id=activity_id, status=2).update(status=3, wx_code=img_url)
             return JsonResponse({'code': 201, 'msg': '活动通过审核', 'access': access})

@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'meetings.apps.MeetingsConfig',
     'rest_framework',
-    'drf_yasg',
     'corsheaders'
 ]
 
@@ -156,11 +155,11 @@ WSGI_APPLICATION = 'mindspore_meetings.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': DEFAULT_CONF.get('DB_NAME', ''),
-        'USER': DEFAULT_CONF.get('DB_USER', 'root'),
-        'PASSWORD': DEFAULT_CONF.get('DB_PASSWORD', '123456'),
-        'HOST': DEFAULT_CONF.get('DB_HOST', '127.0.0.1'),
-        'PORT': DEFAULT_CONF.get('DB_PORT', '3306')
+        'NAME': DEFAULT_CONF.get('DB_NAME'),
+        'USER': DEFAULT_CONF.get('DB_USER'),
+        'PASSWORD': DEFAULT_CONF.get('DB_PASSWORD'),
+        'HOST': DEFAULT_CONF.get('DB_HOST'),
+        'PORT': DEFAULT_CONF.get('DB_PORT')
     }
 }
 
